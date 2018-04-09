@@ -6,7 +6,8 @@ import cucumber.api.CucumberOptions;
 import cucumber.api.junit.Cucumber;
 
 @RunWith(Cucumber.class)
-@CucumberOptions(features ="features",glue= {"gmailLoginTestSteps"})
+@CucumberOptions(features = "features", glue = { "gmailLoginTestSteps" }, plugin = { "pretty",
+		"html:target/cucumber-reports" }, monochrome = true)
 public class TestRunnerGmailLoginSuite {
 
 }
