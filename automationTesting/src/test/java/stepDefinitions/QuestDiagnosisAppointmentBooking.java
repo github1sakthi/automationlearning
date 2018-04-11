@@ -1,5 +1,7 @@
 package stepDefinitions;
 
+import static org.junit.Assert.assertTrue;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -16,7 +18,7 @@ public class QuestDiagnosisAppointmentBooking {
 
 	@Given("^Open browser and load quest diagnostics page$")
 	public void open_browser_and_load_quest_diagnostics_page() throws Throwable {
-		questTestdriver = TestUtils.loadDriver();;
+		questTestdriver = TestUtils.loadChromeDriver();;
 		questTestdriver.get("https://secure.questdiagnostics.com/hcp/psc/jsp/SearchLocation.do");
 	}
 
@@ -58,7 +60,29 @@ public class QuestDiagnosisAppointmentBooking {
 	@Then("^Should reload the page with appointment details$")
 	public void should_reload_the_page_with_appointment_details() throws Throwable {
 		questTestdriver.findElement(By.partialLinkText("Quest Diagnostics - Topeka"));
+		//
 		questTestdriver.findElement(By.partialLinkText("08:15")).click();
 	}
+	
+	@When("^User enters a weekend date and time and clicks Continue$")
+	public void user_enters_a_weekend_date_and_time_and_clicks_Continue() throws Throwable {
+		questTestdriver.findElement(By.cssSelector("img.trigger.datepick-trigger")).click();
+
+		WebDriverWait wait = new WebDriverWait(questTestdriver, 10);
+		wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("div.datepick-nav")));
+		questTestdriver.findElement(By.partialLinkText("28")).click();
+		Select timeSlot = new Select(questTestdriver.findElement(By.id("timeSlot")));
+		timeSlot.selectByValue("11:00");
+		questTestdriver.findElement(By.cssSelector("input.qdbutton.find")).click();
+
+	}
+
+	@Then("^Should reload the page with error message$")
+	public void should_reload_the_page_with_error_message() throws Throwable {
+		TestUtils.waitForElementPresenceOrvisibilityByCssSelector("td.clientErrorMessage",questTestdriver);
+		String validationError=questTestdriver.findElement(By.cssSelector("td.clientErrorMessage")).getText();
+		assertTrue(validationError.equals("No appointment slots found. Please change date and search again."));
+	}
+
 
 }
