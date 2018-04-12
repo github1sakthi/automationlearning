@@ -1,6 +1,5 @@
 package stepDefinition;
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.equalTo;
 
 import java.util.Map;
@@ -49,12 +48,7 @@ public class GetTest {
 	}
 	public void responseBodyCheckArrayFields(Map<String, String> responseFields) {
 		for (Map.Entry<String, String> field : responseFields.entrySet()) {
-			if(StringUtils.isNumeric(field.getValue())){
-				response.body(field.getKey(), containsInAnyOrder(Integer.parseInt(field.getValue())));
-			}
-			else{
 				response.body(field.getKey(), equalTo(field.getValue()));
-			}
 		}
 		
 	}
