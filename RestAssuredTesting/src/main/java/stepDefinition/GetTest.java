@@ -4,8 +4,6 @@ import static org.hamcrest.Matchers.equalTo;
 
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
-
 import io.restassured.response.ValidatableResponse;
 import io.restassured.specification.RequestSpecification;
 
@@ -35,14 +33,9 @@ public class GetTest {
 	}
 	
 	public void responseBodyCheckSingleFields(Map<String, String> responseFields) {
-		
 		for (Map.Entry<String, String> field : responseFields.entrySet()) {
-			if(StringUtils.isNumeric(field.getValue())){
-				response.body(field.getKey(), equalTo(Integer.parseInt(field.getValue())));
-			}
-			else{
-				response.body(field.getKey(), equalTo(field.getValue()));
-			}
+			response.assertThat().body(field.getKey(), equalTo(field.getValue()));
+				
 		}
 		
 	}
