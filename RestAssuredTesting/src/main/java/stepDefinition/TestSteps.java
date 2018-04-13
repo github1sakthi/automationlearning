@@ -10,12 +10,12 @@ import cucumber.api.java.en.When;
 
 public class TestSteps {
 	GetTest getTests;
-
+	PostTest postTests;
 	@Before
 	public void setup() {
 
 		getTests = new GetTest("http://services.groupkt.com/country/get/iso2code/");
-		//postTest = new PostTest("https://reqres.in");
+		postTests = new PostTest("https://api.twitter.com/1.1/lists/create.json");
 
 	}
 
@@ -46,5 +46,20 @@ public class TestSteps {
 	public void ressponse_includes_the_following_in_any_order(Map<String, String> responseFields) throws Throwable {
 		getTests.responseBodyCheckArrayFields(responseFields);
 	}
+	@When("^the user performs posts request with \"([^\"]*)\"\"([^\"]*)\"\"([^\"]*)\"\"([^\"]*)\"$")
+	public void the_user_performs_posts_request_with(String userId, String id, String title, String body) throws Throwable {
+		postTests.submitPostRequest( userId,  id,  title,body);
+	}
+
+	@Then("^the Code Returned is \"([^\"]*)\"$")
+	public void the_Code_Returned_is(String statusCode) throws Throwable {
+	postTests.validateResponseStatusCode(Integer.valueOf(statusCode));
+	}
+
+	@Then("^the body includes the following$")
+	public void the_body_includes_the_following(Map<String, String> responseFields) throws Throwable {
+	postTests.responseBodyCheckArrayFields(responseFields);
+	}
+
 
 }
